@@ -149,12 +149,6 @@
       <p>Mapa de riscos LGPD com campos reais do ERD. Matriz RBAC com 5 perfis incluindo Auditor Externo (Vega Capital). Plano de incidentes.</p>
       <div class="arrow">↗</div>
     </div>
-    <div class="card" onclick="go('page-narrativa')">
-      <div class="num">🎤 04</div>
-      <h3>Narrativa — 20%</h3>
-      <p>Modelo, arquitetura e governança contam a mesma história. Cada decisão de um componente aparece referenciada nos outros.</p>
-      <div class="arrow">↗</div>
-    </div>
   </div>
 </div>
 
@@ -167,6 +161,135 @@
     <div class="stitle">O blueprint<br/><em>do sistema.</em></div>
 
     <p class="prose">O schema cobre o negócio real com <strong>8 tabelas bem definidas</strong>. A separação entre música, álbum, artista e gênero reflete o domínio. A tabela <code>reproducao</code> funciona como tabela de fatos num mini data warehouse — registra quem ouviu o quê, quando, em qual dispositivo e por qual origem. A tabela <code>assinatura</code> está desacoplada de <code>usuario</code>, o que permite rastrear histórico de planos (churn e reativação já estão modelados).</p>
+
+    <h2 class="bt">ERD OLTP — Schema SoundByte (9 tabelas)</h2>
+    <p class="prose">Diagrama relacional gerado no dbdiagram.io a partir do script PostgreSQL entregue. Cores: <span style="color:#c4b5fd">■</span> PK &nbsp; <span style="color:#a78bfa">■</span> FK &nbsp; <span style="color:#d1d5db">■</span> campo normal.</p>
+    <div class="sw" style="overflow-x:auto">
+      <svg viewBox="0 0 1100 622" width="1080" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI',monospace,system-ui">
+        <defs>
+          <marker id="mend" markerWidth="5" markerHeight="6" refX="4" refY="3" orient="auto">
+            <path d="M0,0 L5,3 L0,6" stroke="#7c3aed" stroke-width="1.2" fill="none"/>
+          </marker>
+        </defs>
+        <!-- FK PATHS -->
+        <!-- 1. genero.id → artista.genero_id -->
+        <path d="M 225 64 L 258 64 L 258 247 L 290 247" stroke="#7c3aed" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#mend)"/>
+        <!-- 2. genero.id → musica.genero_id (around top) -->
+        <path d="M 30 64 L 12 64 L 12 10 L 1090 10 L 1090 209 L 1080 209" stroke="#7c3aed" stroke-width="1" fill="none" stroke-dasharray="3,4" opacity="0.45" marker-end="url(#mend)"/>
+        <!-- 3. artista.id → album.artista_id -->
+        <path d="M 495 196 L 554 196 L 554 91 L 620 91" stroke="#7c3aed" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#mend)"/>
+        <!-- 4. artista.id → musica.artista_id -->
+        <path d="M 495 202 L 848 202 L 848 177 L 875 177" stroke="#7c3aed" stroke-width="1" fill="none" stroke-dasharray="4,3" opacity="0.6" marker-end="url(#mend)"/>
+        <!-- 5. album.id → musica.album_id -->
+        <path d="M 825 59 L 848 59 L 848 193 L 875 193" stroke="#7c3aed" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#mend)"/>
+        <!-- 6. cidade.id → usuario.cidade_id -->
+        <path d="M 225 344 L 258 344 L 258 377 L 290 377" stroke="#7c3aed" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#mend)"/>
+        <!-- 7. usuario.id → reproducao.usuario_id -->
+        <path d="M 495 329 L 567 329 L 567 315 L 640 315" stroke="#7c3aed" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#mend)"/>
+        <!-- 8. musica.id → reproducao.musica_id -->
+        <path d="M 875 129 L 857 129 L 857 331 L 845 331" stroke="#7c3aed" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#mend)"/>
+        <!-- 9. usuario.id → assinatura.usuario_id -->
+        <path d="M 495 329 L 580 329 L 580 490 L 640 490" stroke="#7c3aed" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#mend)"/>
+        <!-- 10. plano.id → assinatura.plano_id -->
+        <path d="M 235 544 L 608 544 L 608 506 L 640 506" stroke="#7c3aed" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#mend)"/>
+
+        <!-- TABLE: genero (30,30,195,58) -->
+        <rect x="30" y="30" width="195" height="58" rx="5" fill="#1e0a3c" stroke="#6d28d9" stroke-width="1.5"/>
+        <rect x="30" y="30" width="195" height="26" rx="5" fill="#4c1d95"/>
+        <rect x="30" y="46" width="195" height="10" fill="#4c1d95"/>
+        <text x="127" y="47" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">genero</text>
+        <text x="38" y="67" font-size="9" fill="#c4b5fd">id</text><text x="220" y="67" text-anchor="end" font-size="9" fill="#9ca3af">SERIAL</text>
+        <text x="38" y="83" font-size="9" fill="#d1d5db">nome</text><text x="220" y="83" text-anchor="end" font-size="9" fill="#9ca3af">VARCHAR(50) NN</text>
+
+        <!-- TABLE: artista (290,165,205,90) -->
+        <rect x="290" y="165" width="205" height="90" rx="5" fill="#1e0a3c" stroke="#6d28d9" stroke-width="1.5"/>
+        <rect x="290" y="165" width="205" height="26" rx="5" fill="#4c1d95"/>
+        <rect x="290" y="181" width="205" height="10" fill="#4c1d95"/>
+        <text x="392" y="182" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">artista</text>
+        <text x="298" y="199" font-size="9" fill="#c4b5fd">id</text><text x="490" y="199" text-anchor="end" font-size="9" fill="#9ca3af">SERIAL</text>
+        <text x="298" y="215" font-size="9" fill="#d1d5db">nome</text><text x="490" y="215" text-anchor="end" font-size="9" fill="#9ca3af">VARCHAR(100) NN</text>
+        <text x="298" y="231" font-size="9" fill="#d1d5db">pais</text><text x="490" y="231" text-anchor="end" font-size="9" fill="#9ca3af">VARCHAR(50) NN</text>
+        <text x="298" y="247" font-size="9" fill="#a78bfa">genero_id</text><text x="490" y="247" text-anchor="end" font-size="9" fill="#9ca3af">INT NN</text>
+
+        <!-- TABLE: album (620,25,205,90) -->
+        <rect x="620" y="25" width="205" height="90" rx="5" fill="#1e0a3c" stroke="#6d28d9" stroke-width="1.5"/>
+        <rect x="620" y="25" width="205" height="26" rx="5" fill="#4c1d95"/>
+        <rect x="620" y="41" width="205" height="10" fill="#4c1d95"/>
+        <text x="722" y="42" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">album</text>
+        <text x="628" y="59" font-size="9" fill="#c4b5fd">id</text><text x="820" y="59" text-anchor="end" font-size="9" fill="#9ca3af">SERIAL</text>
+        <text x="628" y="75" font-size="9" fill="#d1d5db">titulo</text><text x="820" y="75" text-anchor="end" font-size="9" fill="#9ca3af">VARCHAR(150) NN</text>
+        <text x="628" y="91" font-size="9" fill="#a78bfa">artista_id</text><text x="820" y="91" text-anchor="end" font-size="9" fill="#9ca3af">INT NN</text>
+        <text x="628" y="107" font-size="9" fill="#d1d5db">ano_lancamento</text><text x="820" y="107" text-anchor="end" font-size="9" fill="#9ca3af">SMALLINT NN</text>
+
+        <!-- TABLE: musica (875,95,205,122) -->
+        <rect x="875" y="95" width="205" height="122" rx="5" fill="#1e0a3c" stroke="#6d28d9" stroke-width="1.5"/>
+        <rect x="875" y="95" width="205" height="26" rx="5" fill="#4c1d95"/>
+        <rect x="875" y="111" width="205" height="10" fill="#4c1d95"/>
+        <text x="977" y="112" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">musica</text>
+        <text x="883" y="129" font-size="9" fill="#c4b5fd">id</text><text x="1075" y="129" text-anchor="end" font-size="9" fill="#9ca3af">SERIAL</text>
+        <text x="883" y="145" font-size="9" fill="#d1d5db">titulo</text><text x="1075" y="145" text-anchor="end" font-size="9" fill="#9ca3af">VARCHAR(150) NN</text>
+        <text x="883" y="161" font-size="9" fill="#d1d5db">duracao_segundos</text><text x="1075" y="161" text-anchor="end" font-size="9" fill="#9ca3af">INT NN</text>
+        <text x="883" y="177" font-size="9" fill="#a78bfa">artista_id</text><text x="1075" y="177" text-anchor="end" font-size="9" fill="#9ca3af">INT NN</text>
+        <text x="883" y="193" font-size="9" fill="#a78bfa">album_id</text><text x="1075" y="193" text-anchor="end" font-size="9" fill="#9ca3af">INT NN</text>
+        <text x="883" y="209" font-size="9" fill="#a78bfa">genero_id</text><text x="1075" y="209" text-anchor="end" font-size="9" fill="#9ca3af">INT NN</text>
+
+        <!-- TABLE: cidade (30,310,195,74) -->
+        <rect x="30" y="310" width="195" height="74" rx="5" fill="#1e0a3c" stroke="#6d28d9" stroke-width="1.5"/>
+        <rect x="30" y="310" width="195" height="26" rx="5" fill="#4c1d95"/>
+        <rect x="30" y="326" width="195" height="10" fill="#4c1d95"/>
+        <text x="127" y="327" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">cidade</text>
+        <text x="38" y="344" font-size="9" fill="#c4b5fd">id</text><text x="220" y="344" text-anchor="end" font-size="9" fill="#9ca3af">SERIAL</text>
+        <text x="38" y="360" font-size="9" fill="#d1d5db">nome</text><text x="220" y="360" text-anchor="end" font-size="9" fill="#9ca3af">VARCHAR(80) NN</text>
+        <text x="38" y="376" font-size="9" fill="#d1d5db">estado</text><text x="220" y="376" text-anchor="end" font-size="9" fill="#9ca3af">CHAR(2) NN</text>
+
+        <!-- TABLE: usuario (290,295,205,154) -->
+        <rect x="290" y="295" width="205" height="154" rx="5" fill="#1e0a3c" stroke="#6d28d9" stroke-width="1.5"/>
+        <rect x="290" y="295" width="205" height="26" rx="5" fill="#4c1d95"/>
+        <rect x="290" y="311" width="205" height="10" fill="#4c1d95"/>
+        <text x="392" y="312" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">usuario</text>
+        <text x="298" y="329" font-size="9" fill="#c4b5fd">id</text><text x="490" y="329" text-anchor="end" font-size="9" fill="#9ca3af">SERIAL</text>
+        <text x="298" y="345" font-size="9" fill="#d1d5db">nome</text><text x="490" y="345" text-anchor="end" font-size="9" fill="#9ca3af">VARCHAR(100) NN</text>
+        <text x="298" y="361" font-size="9" fill="#d1d5db">email</text><text x="490" y="361" text-anchor="end" font-size="9" fill="#9ca3af">VARCHAR(150) NN</text>
+        <text x="298" y="377" font-size="9" fill="#a78bfa">cidade_id</text><text x="490" y="377" text-anchor="end" font-size="9" fill="#9ca3af">INT NN</text>
+        <text x="298" y="393" font-size="9" fill="#d1d5db">idade</text><text x="490" y="393" text-anchor="end" font-size="9" fill="#9ca3af">SMALLINT NN</text>
+        <text x="298" y="409" font-size="9" fill="#d1d5db">dispositivo</text><text x="490" y="409" text-anchor="end" font-size="9" fill="#9ca3af">VARCHAR(20) NN</text>
+        <text x="298" y="425" font-size="9" fill="#d1d5db">origem</text><text x="490" y="425" text-anchor="end" font-size="9" fill="#9ca3af">VARCHAR(20) NN</text>
+        <text x="298" y="441" font-size="9" fill="#d1d5db">data_cadastro</text><text x="490" y="441" text-anchor="end" font-size="9" fill="#9ca3af">DATE NN</text>
+
+        <!-- TABLE: reproducao (640,265,205,90) -->
+        <rect x="640" y="265" width="205" height="90" rx="5" fill="#1e0a3c" stroke="#6d28d9" stroke-width="1.5"/>
+        <rect x="640" y="265" width="205" height="26" rx="5" fill="#4c1d95"/>
+        <rect x="640" y="281" width="205" height="10" fill="#4c1d95"/>
+        <text x="742" y="282" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">reproducao</text>
+        <text x="648" y="299" font-size="9" fill="#c4b5fd">id</text><text x="840" y="299" text-anchor="end" font-size="9" fill="#9ca3af">SERIAL</text>
+        <text x="648" y="315" font-size="9" fill="#a78bfa">usuario_id</text><text x="840" y="315" text-anchor="end" font-size="9" fill="#9ca3af">INT NN</text>
+        <text x="648" y="331" font-size="9" fill="#a78bfa">musica_id</text><text x="840" y="331" text-anchor="end" font-size="9" fill="#9ca3af">INT NN</text>
+        <text x="648" y="347" font-size="9" fill="#d1d5db">data_hora</text><text x="840" y="347" text-anchor="end" font-size="9" fill="#9ca3af">TIMESTAMP NN</text>
+
+        <!-- TABLE: plano (30,510,205,90) -->
+        <rect x="30" y="510" width="205" height="90" rx="5" fill="#1e0a3c" stroke="#6d28d9" stroke-width="1.5"/>
+        <rect x="30" y="510" width="205" height="26" rx="5" fill="#4c1d95"/>
+        <rect x="30" y="526" width="205" height="10" fill="#4c1d95"/>
+        <text x="132" y="527" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">plano</text>
+        <text x="38" y="544" font-size="9" fill="#c4b5fd">id</text><text x="230" y="544" text-anchor="end" font-size="9" fill="#9ca3af">SERIAL</text>
+        <text x="38" y="560" font-size="9" fill="#d1d5db">nome</text><text x="230" y="560" text-anchor="end" font-size="9" fill="#9ca3af">VARCHAR(50) NN</text>
+        <text x="38" y="576" font-size="9" fill="#d1d5db">preco</text><text x="230" y="576" text-anchor="end" font-size="9" fill="#9ca3af">NUMERIC(6,2) NN</text>
+        <text x="38" y="592" font-size="9" fill="#d1d5db">max_dispositivos</text><text x="230" y="592" text-anchor="end" font-size="9" fill="#9ca3af">INT NN</text>
+
+        <!-- TABLE: assinatura (640,440,205,138) -->
+        <rect x="640" y="440" width="205" height="138" rx="5" fill="#1e0a3c" stroke="#6d28d9" stroke-width="1.5"/>
+        <rect x="640" y="440" width="205" height="26" rx="5" fill="#4c1d95"/>
+        <rect x="640" y="456" width="205" height="10" fill="#4c1d95"/>
+        <text x="742" y="457" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">assinatura</text>
+        <text x="648" y="474" font-size="9" fill="#c4b5fd">id</text><text x="840" y="474" text-anchor="end" font-size="9" fill="#9ca3af">SERIAL</text>
+        <text x="648" y="490" font-size="9" fill="#a78bfa">usuario_id</text><text x="840" y="490" text-anchor="end" font-size="9" fill="#9ca3af">INT NN</text>
+        <text x="648" y="506" font-size="9" fill="#a78bfa">plano_id</text><text x="840" y="506" text-anchor="end" font-size="9" fill="#9ca3af">INT NN</text>
+        <text x="648" y="522" font-size="9" fill="#d1d5db">data_inicio</text><text x="840" y="522" text-anchor="end" font-size="9" fill="#9ca3af">DATE NN</text>
+        <text x="648" y="538" font-size="9" fill="#d1d5db">data_fim</text><text x="840" y="538" text-anchor="end" font-size="9" fill="#9ca3af">DATE</text>
+        <text x="648" y="554" font-size="9" fill="#d1d5db">valor</text><text x="840" y="554" text-anchor="end" font-size="9" fill="#9ca3af">NUMERIC(6,2) NN</text>
+        <text x="648" y="570" font-size="9" fill="#d1d5db">status</text><text x="840" y="570" text-anchor="end" font-size="9" fill="#9ca3af">VARCHAR(20) NN</text>
+      </svg>
+    </div>
 
     <h2 class="bt">Star Schema — fato_reproducao</h2>
     <p class="prose">O Star Schema projeta os eventos de <code>reproducao</code> como tabela fato central, com quatro dimensões derivadas diretamente das tabelas OLTP. A granularidade é <strong>uma linha por reprodução individual</strong> — o evento mais atômico do sistema, que permite agregar em qualquer nível superior (sessão, dia, usuário, artista).</p>
@@ -447,58 +570,10 @@
   </div>
   <div class="pnav">
     <button class="nb" onclick="go('page-arq')">← Arquitetura</button>
-    <button class="nb" onclick="go('page-narrativa')">Narrativa →</button>
-  </div>
-</div>
-
-<!-- NARRATIVA -->
-<div class="page" id="page-narrativa">
-  <div class="hdr"><span class="brand">ESPM · GBDBI · 2026</span><span class="badge">🎤 Narrativa · 20%</span></div>
-  <div class="wrap">
-    <button class="back" onclick="go('page-menu')">← Menu</button>
-    <div class="stag">04 · Narrativa Estratégica</div>
-    <div class="stitle">A análise é evidência.<br/><em>A decisão é integrada.</em></div>
-
-    <h2 class="bt">O que o Vega Capital precisa ver</h2>
-    <div class="cg">
-      <div class="cbad">
-        <div class="cl">❌ Apresentação fragmentada</div>
-        <p>Três seções técnicas independentes que não se conversam. Modelo, Arquitetura e Governança entregues como blocos separados — cada decisão existe sozinha, sem rastrear de volta às outras.</p>
-      </div>
-      <div class="cgood">
-        <div class="cl">✅ Narrativa integrada</div>
-        <p>As três seções se reforçam mutuamente: cada decisão em uma aparece referenciada nas outras. O Vega Capital quer ver um time que pensa de forma integrada e conhece as próprias fragilidades.</p>
-      </div>
-    </div>
-
-    <h2 class="bt">Roteiro da Apresentação · 10 min · usando o PDF de entrega</h2>
-    <div class="tw"><table>
-      <thead><tr><th>Seção do PDF</th><th>O que apresentar</th><th>Tempo</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Abertura</strong></td><td>O que é a SoundByte — contexto em 1 frase e o desafio central da due diligence</td><td>30s</td></tr>
-        <tr><td><strong>Modelo de Dados</strong></td><td>Mostrar o ERD e o Star Schema — "veja onde o modelo é sólido e onde identificamos fragilidades"</td><td>2,5 min</td></tr>
-        <tr><td><strong>Arquitetura</strong></td><td>Explicar por que cada tecnologia foi escolhida — conectando às entidades do ERD apresentado</td><td>2,5 min</td></tr>
-        <tr><td><strong>Governança</strong></td><td>Mostrar o mapa LGPD e a matriz RBAC — "os dados sensíveis que identificamos no modelo estão cobertos assim"</td><td>2 min</td></tr>
-        <tr><td><strong>Avaliação Final</strong></td><td>A SoundByte tem maturidade de dados para receber R$ 50 milhões? Quais são os pontos fortes e os riscos reais?</td><td>1,5 min</td></tr>
-        <tr><td><strong>Perguntas</strong></td><td>Responder as objeções do time do Vega Capital</td><td>1 min</td></tr>
-      </tbody>
-    </table></div>
-
-    <div class="ic" style="background:rgba(109,40,217,.12);border-color:rgba(139,92,246,.3);margin-top:28px">
-      <div class="lbl" style="color:var(--p300)">A Regra da Coerência</div>
-      <p>Os três componentes devem se reforçar mutuamente na apresentação. <strong style="color:var(--p200)">Exemplo de coerência:</strong> "O ERD mostra que o histórico de streaming contém dados comportamentais sensíveis [Modelo]. Por isso, alocamos esse dado no MongoDB com acesso controlado [Arquitetura]. E na matriz RBAC, apenas o Eng. de Dados e o DPO têm acesso de leitura a esses documentos [Governança]." Essa cadeia é o que o investidor quer ver.</p>
-    </div>
-
-    <div class="ic" style="background:rgba(127,29,29,.12);border-color:rgba(252,165,165,.2);margin-top:14px">
-      <div class="lbl" style="color:#fca5a5">A Pergunta Final que Você Precisa Responder</div>
-      <p style="color:var(--text)">Com base na análise dos três componentes, sua equipe deve emitir um parecer: <em style="color:var(--p200)">"A SoundByte demonstra maturidade de dados suficiente para uma rodada Series B de R$ 50 milhões?"</em> Sustente sua resposta com evidências concretas do modelo, da arquitetura e da governança — e seja honesto sobre os riscos encontrados. Investidores valorizam times que conhecem suas próprias fragilidades.</p>
-    </div>
-  </div>
-  <div class="pnav">
-    <button class="nb" onclick="go('page-gov')">← Governança</button>
     <button class="nb" onclick="go('page-menu')">Menu ↩</button>
   </div>
 </div>
+
 
 <script>
   function go(id){
